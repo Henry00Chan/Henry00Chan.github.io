@@ -25,7 +25,7 @@ var _hmt = _hmt || [];
 <meta property="og:description" content="title:项目NetNote解读（一）下 项目NetNote解读（一）下依赖注入（Dependency Injection，简称DI）是IoC的一种方式，作用是把有依赖关系的类放到容器中，解析出这些类的实例，实现类的解耦。 12345678public class Animals &amp;#123;    ...    Dog dog;    ...    public Animals(Dog dog">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-31T03:25:22.121Z">
-<meta property="article:modified_time" content="2020-01-31T03:30:09.236Z">
+<meta property="article:modified_time" content="2020-01-31T03:37:19.676Z">
 <meta property="article:author" content="HH&amp;YY">
 <meta name="twitter:card" content="summary">
   
@@ -198,6 +198,8 @@ var _hmt = _hmt || [];
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Animals</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    Dog dog;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Animals</span>(<span class="params">Dog dog</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.dog = dog;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述代码中在Animals类中创建Dog类的实例，然后将dog作为参数传入构造函数，则可以说Animals类对Dog类有一个依赖。</p>
+<a id="more"></a>
+
 <h5 id="控制反转（Inversion-of-Control，缩写为IoC）"><a href="#控制反转（Inversion-of-Control，缩写为IoC）" class="headerlink" title="控制反转（Inversion of Control，缩写为IoC）"></a><strong>控制反转</strong>（Inversion of Control，缩写为<strong>IoC</strong>）</h5><p>是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度)。</p>
 <p><strong>1.IoC理论的背景</strong>  我们都知道，在采用面向对象方法设计的软件系统中，它的底层实现都是由N个对象组成的，所有的对象通过彼此的合作，最终实现系统的业务逻辑。</p>
 <p>图1：软件系统中耦合的对象</p>

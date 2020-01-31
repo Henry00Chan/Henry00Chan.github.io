@@ -198,31 +198,7 @@ var _hmt = _hmt || [];
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Animals</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    Dog dog;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Animals</span>(<span class="params">Dog dog</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.dog = dog;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述代码中在Animals类中创建Dog类的实例，然后将dog作为参数传入构造函数，则可以说Animals类对Dog类有一个依赖。</p>
-<h5 id="控制反转（Inversion-of-Control，缩写为IoC）"><a href="#控制反转（Inversion-of-Control，缩写为IoC）" class="headerlink" title="控制反转（Inversion of Control，缩写为IoC）"></a><strong>控制反转</strong>（Inversion of Control，缩写为<strong>IoC</strong>）</h5><p>是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度)。</p>
-<p><strong>1.IoC理论的背景</strong>  我们都知道，在采用面向对象方法设计的软件系统中，它的底层实现都是由N个对象组成的，所有的对象通过彼此的合作，最终实现系统的业务逻辑。</p>
-<p>图1：软件系统中耦合的对象</p>
-<p>​    如果我们打开机械式手表的后盖，就会看到与上面类似的情形，各个齿轮分别带动时针、分针和秒针顺时针旋转，从而在表盘上产生正确的时间。图1中描述的就是这样的一个齿轮组，它拥有多个独立的齿轮，这些齿轮相互啮合在一起，协同工作，共同完成某项任务。我们可以看到，在这样的齿轮组中，如果有一个齿轮出了问题，就可能会影响到整个齿轮组的正常运转。<br>​    齿轮组中齿轮之间的啮合关系,与软件系统中对象之间的耦合关系非常相似。对象之间的耦合关系是无法避免的，也是必要的，这是协同工作的基础。现在，伴随着工业级应用的规模越来越庞大，对象之间的依赖关系也越来越复杂，经常会出现对象之间的多重依赖性关系，因此，架构师和设计师对于系统的分析和设计，将面临更大的挑战。对象之间耦合度过高的系统，必然会出现牵一发而动全身的情形。</p>
-<p>图2：对象之间复杂的依赖关系</p>
-<p>​    耦合关系不仅会出现在对象与对象之间，也会出现在软件系统的各模块之间，以及软件系统和硬件系统之间。如何降低系统之间、模块之间和对象之间的耦合度，是软件工程永远追求的目标之一。为了解决对象之间的耦合度过高的问题，软件专家Michael Mattson提出了IOC理论，用来实现对象之间的“解耦”，目前这个理论已经被成功地应用到实践当中，很多的J2EE项目均采用了IOC框架产品spring。</p>
-<p><strong>2.什么是控制反转(IoC)</strong><br>    IOC是Inversion of Control的缩写，多数书籍翻译成“控制反转”，还有些书籍翻译成为“控制反向”或者“控制倒置”。<br>    1996年，Michael Mattson在一篇有关探讨面向对象框架的文章中，首先提出了IOC 这个概念。对于面向对象设计及编程的基本思想，前面我们已经讲了很多了，不再赘述，简单来说就是把复杂系统分解成相互合作的对象，这些对象类通过封装以后，内部实现对外部是透明的，从而降低了解决问题的复杂度，而且可以灵活地被重用和扩展。IOC理论提出的观点大体是这样的：借助于“第三方”实现具有依赖关系的对象之间的解耦，如下图：</p>
-<p> 图3：IOC解耦过程</p>
-<p>​    大家看到了吧，由于引进了中间位置的“第三方”，也就是IOC容器，使得A、B、C、D这4个对象没有了耦合关系，齿轮之间的传动全部依靠“第三方”了，全部对象的控制权全部上缴给“第三方”IOC容器，所以，IOC容器成了整个系统的关键核心，它起到了一种类似“粘合剂”的作用，把系统中的所有对象粘合在一起发挥作用，如果没有这个“粘合剂”，对象与对象之间会彼此失去联系，这就是有人把IOC容器比喻成“粘合剂”的由来。<br>我们再来做个试验：把上图中间的IOC容器拿掉，然后再来看看这套系统：</p>
-<p>图4：拿掉IoC容器后的系统</p>
-<pre><code>我们现在看到的画面，就是我们要实现整个系统所需要完成的全部内容。这时候，A、B、C、D这4个对象之间已经没有了耦合关系，彼此毫无联系，这样的话，当你在实现A的时候，根本无须再去考虑B、C和D了，对象之间的依赖关系已经降低到了最低程度。所以，如果真能实现IOC容器，对于系统开发而言，这将是一件多么美好的事情，参与开发的每一成员只要实现自己的类就可以了，跟别人没有任何关系！
-我们再来看看，控制反转(IOC)到底为什么要起这么个名字？我们来对比一下：
-软件系统在没有引入IOC容器之前，如图1所示，对象A依赖于对象B，那么对象A在初始化或者运行到某一点的时候，自己必须主动去创建对象B或者使用已经创建的对象B。无论是创建还是使用对象B，控制权都在自己手上。
-软件系统在引入IOC容器之后，这种情形就完全改变了，如图3所示，由于IOC容器的加入，对象A与对象B之间失去了直接联系，所以，当对象A运行到需要对象B的时候，IOC容器会主动创建一个对象B注入到对象A需要的地方。
-通过前后的对比，我们不难看出来：对象A获得依赖对象B的过程,由主动行为变为了被动行为，控制权颠倒过来了，这就是“控制反转”这个名称的由来。</code></pre><p><strong>3.IOC的别名：依赖注入(DI)</strong>    2004年，Martin Fowler探讨了同一个问题，既然IOC是控制反转，那么到底是“哪些方面的控制被反转了呢？”，经过详细地分析和论证后，他得出了答案：“获得依赖对象的过程被反转了”。控制被反转之后，获得依赖对象的过程由自身管理变为了由IOC容器主动注入。于是，他给“控制反转”取了一个更合适的名字叫做“依赖注入（Dependency Injection）”。他的这个答案，实际上给出了实现IOC的方法：注入。所谓依赖注入，就是由IOC容器在运行期间，动态地将某种依赖关系注入到对象之中。</p>
-<p>所以，依赖注入(DI)和控制反转(IOC)是从不同的角度的描述的同一件事情，就是指通过引入IOC容器，利用依赖关系注入的方式，实现对象之间的解耦。<br>    我们举一个生活中的例子，来帮助理解依赖注入的过程。大家对USB接口和USB设备应该都很熟悉吧，USB为我们使用电脑提供了很大的方便，现在有很多的外部设备都支持USB接口。</p>
-<p>图6：USB接口和USB设备</p>
-<p>​    现在，我们利用电脑主机和USB接口来实现一个任务：从外部USB设备读取一个文件。<br>​    电脑主机读取文件的时候，它一点也不会关心USB接口上连接的是什么外部设备，而且它确实也无须知道。它的任务就是读取USB接口，挂接的外部设备只要符合USB接口标准即可。所以，如果我给电脑主机连接上一个U盘，那么主机就从U盘上读取文件；如果我给电脑主机连接上一个外置硬盘，那么电脑主机就从外置硬盘上读取文件。挂接外部设备的权力由我作主，即控制权归我，至于USB接口挂接的是什么设备，电脑主机是决定不了，它只能被动的接受。电脑主机需要外部设备的时候，根本不用它告诉我，我就会主动帮它挂上它想要的外部设备，你看我的服务是多么的到位。这就是我们生活中常见的一个依赖注入的例子。在这个过程中，我就起到了IOC容器的作用。<br>​    通过这个例子,依赖注入的思路已经非常清楚：当电脑主机读取文件的时候，我就把它所要依赖的外部设备，帮他挂接上。整个外部设备注入的过程和一个被依赖的对象在系统运行时被注入另外一个对象内部的过程完全一样。<br>我们把依赖注入应用到软件系统中，再来描述一下这个过程：<br>​    对象A依赖于对象B,当对象 A需要用到对象B的时候，IOC容器就会立即创建一个对象B送给对象A。IOC容器就是一个对象制造工厂，你需要什么，它会给你送去，你直接使用就行了，而再也不用去关心你所用的东西是如何制成的，也不用关心最后是怎么被销毁的，这一切全部由IOC容器包办。<br>​    在传统的实现中，由程序内部代码来控制组件之间的关系。我们经常使用new关键字来实现两个组件之间关系的组合，这种实现方式会造成组件之间耦合。IOC很好地解决了该问题，它将实现组件间关系从程序内部提到外部容器，也就是说由容器在运行期将组件间的某种依赖关系动态注入组件中。</p>
-<p>  <strong>4.IOC为我们带来了什么好处</strong></p>
-<p>​     我们还是从USB的例子说起，使用USB外部设备比使用内置硬盘，到底带来什么好处？<br>​     第一、USB设备作为电脑主机的外部设备，在插入主机之前，与电脑主机没有任何的关系，只有被我们连接在一起之后，两者才发生联系，具有相关性。所以，无论两者中的任何一方出现什么的问题，都不会影响另一方的运行。这种特性体现在软件工程中，就是可维护性比较好，非常便于进行单元测试，便于调试程序和诊断故障。代码中的每一个Class都可以单独测试，彼此之间互不影响，只要保证自身的功能无误即可，这就是组件之间低耦合或者无耦合带来的好处。<br>​     第二、USB设备和电脑主机的之间无关性，还带来了另外一个好处，生产USB设备的厂商和生产电脑主机的厂商完全可以是互不相干的人，各干各事，他们之间唯一需要遵守的就是USB接口标准。这种特性体现在软件开发过程中，好处可是太大了。每个开发团队的成员都只需要关心实现自身的业务逻辑，完全不用去关心其它的人工作进展，因为你的任务跟别人没有任何关系，你的任务可以单独测试，你的任务也不用依赖于别人的组件，再也不用扯不清责任了。所以，在一个大中型项目中，团队成员分工明确、责任明晰，很容易将一个大的任务划分为细小的任务，开发效率和产品质量必将得到大幅度的提高。<br>​     第三、同一个USB外部设备可以插接到任何支持USB的设备，可以插接到电脑主机，也可以插接到DV机，USB外部设备可以被反复利用。在软件工程中，这种特性就是可复用性好，我们可以把具有普遍性的常用组件独立出来，反复利用到项目中的其它部分，或者是其它项目，当然这也是面向对象的基本特征。显然，IOC不仅更好地贯彻了这个原则，提高了模块的可复用性。符合接口标准的实现，都可以插接到支持此标准的模块中。<br>​     第四、同USB外部设备一样，模块具有热插拔特性。IOC生成对象的方式转为外置方式，也就是把对象生成放在配置文件里进行定义，这样，当我们更换一个实现子类将会变得很简单，只要修改配置文件就可以了，完全具有热插拨的特性。<br>以上几点好处，难道还不足以打动我们，让我们在项目开发过程中使用IOC框架吗？</p>
-<p><strong>5.IOC容器的技术剖析</strong><br>    IOC中最基本的技术就是“反射(Reflection)”编程，目前.Net C#、Java和PHP5等语言均支持，其中PHP5的技术书籍中，有时候也被翻译成“映射”。有关反射的概念和用法，大家应该都很清楚，通俗来讲就是根据给出的类名（字符串方式）来动态地生成对象。这种编程方式可以让对象在生成时才决定到底是哪一种对象。反射的应用是很广泛的，很多的成熟的框架，比如象Java中的hibernate、Spring框架，.Net中 NHibernate、Spring.NET框架都是把“反射”做为最基本的技术手段。<br>    反射技术其实很早就出现了，但一直被忽略，没有被进一步的利用。当时的反射编程方式相对于正常的对象生成方式要慢至少得10倍。现在的反射技术经过改良优化，已经非常成熟，反射方式生成对象和通常对象生成方式，速度已经相差不大了，大约为1-2倍的差距。<br>    我们可以把IOC容器的工作模式看做是工厂模式的升华，可以把IOC容器看作是一个工厂，这个工厂里要生产的对象都在配置文件中给出定义，然后利用编程语言的的反射编程，根据配置文件中给出的类名生成相应的对象。从实现来看，IOC是把以前在工厂方法里写死的对象生成代码，改变为由配置文件来定义，也就是把工厂和对象生成这两者独立分隔开来，目的就是提高灵活性和可维护性。</p>
-<p><strong>6.IOC容器的一些产品</strong><br>    Sun ONE技术体系下的IOC容器有：轻量级的有Spring、Guice、Pico Container、Avalon、HiveMind；重量级的有EJB；不轻不重的有JBoss，Jdon等等。Spring框架作为Java开发中SSH(Struts、Spring、Hibernate)三剑客之一，大中小项目中都有使用，非常成熟，应用广泛，EJB在关键性的工业级项目中也被使用，比如某些电信业务。<br>    .Net技术体系下的IOC容器有：Spring.Net、Castle等等。Spring.Net是从Java的Spring移植过来的IOC容器，Castle的IOC容器就是Windsor部分。它们均是轻量级的框架，比较成熟，其中Spring.Net已经被逐渐应用于各种项目中。</p>
-<p><strong>7.使用IOC框架应该注意什么</strong><br>    使用IOC框架产品能够给我们的开发过程带来很大的好处，但是也要充分认识引入IOC框架的缺点，做到心中有数，杜绝滥用框架。<br>    第一、软件系统中由于引入了第三方IOC容器，生成对象的步骤变得有些复杂，本来是两者之间的事情，又凭空多出一道手续，所以，我们在刚开始使用IOC框架的时候，会感觉系统变得不太直观。所以，引入了一个全新的框架，就会增加团队成员学习和认识的培训成本，并且在以后的运行维护中，还得让新加入者具备同样的知识体系。<br>    第二、由于IOC容器生成对象是通过反射方式，在运行效率上有一定的损耗。如果你要追求运行效率的话，就必须对此进行权衡。<br>    第三、具体到IOC框架产品(比如：Spring)来讲，需要进行大量的配制工作，比较繁琐，对于一些小的项目而言，客观上也可能加大一些工作成本。<br>    第四、IOC框架产品本身的成熟度需要进行评估，如果引入一个不成熟的IOC框架产品，那么会影响到整个项目，所以这也是一个隐性的风险。<br>    我们大体可以得出这样的结论：一些工作量不大的项目或者产品，不太适合使用IOC框架产品。另外，如果团队成员的知识能力欠缺，对于IOC框架产品缺乏深入的理解，也不要贸然引入。最后，特别强调运行效率的项目或者产品，也不太适合引入IOC框架产品，象WEB2.0网站就是这种情况。</p>
-<p>摘自[<a href="https://www.cnblogs.com/jhli/p/6019895.html" target="_blank" rel="noopener">【架构师之路】依赖注入原理—IoC框架</a>]</p>
-
+        
       
 
       
@@ -288,19 +264,7 @@ var _hmt = _hmt || [];
 <h2 id="项目NetNote解读（一）上"><a href="#项目NetNote解读（一）上" class="headerlink" title="项目NetNote解读（一）上"></a>项目NetNote解读（一）上</h2><h5 id="NoteContext"><a href="#NoteContext" class="headerlink" title="NoteContext"></a>NoteContext</h5><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> NoteContext : DbContext</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">NoteContext</span>(<span class="params">DbContextOptions&lt;NoteContext&gt; options</span>) : <span class="title">base</span>(<span class="params">options</span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> DbSet&lt;Note&gt; Notes &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line">	<span class="keyword">public</span> DbSet&lt;NoteType&gt; NoteTypes &#123;<span class="keyword">get</span>;<span class="keyword">set</span>;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NoteContext继承自DbContext,同时拥有自己的options</span><br><span class="line">NoteContext(DbContextOptions&lt;NoteContext&gt; options) : base(options)就是重载NoteContext方法，使得它可以接受options参数，便于在其他代码调用并修改</span><br><span class="line"></span><br><span class="line">DbContext实例发起一个与数据库的会话，可用于查询和保存实体的实例。同时是工作单元和存储库模式的组合。</span><br></pre></td></tr></table></figure>
-
-<h5 id="针对代码"><a href="#针对代码" class="headerlink" title="针对代码"></a>针对代码</h5><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> connection = <span class="string">@"Server=.;Database=Note;UID=sa;PWD=sa;"</span>;</span><br><span class="line">	services.AddDbContext&lt;NoteContext&gt;(options =&gt;</span><br><span class="line">options.UseSqlServer(connection);</span><br><span class="line">	)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>IServiceCollection，.Net core 框架自带的一个容器，使用时需要通过Nuget包把其所依赖的dll文件添加进来。IServiceCollection里面的AddDbContext方法，在微软官方文档如此描述：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Registers the given context as a service in the IServiceCollection. You use this method when using dependency injection in your application, such as with ASP.NET.</span><br><span class="line"></span><br><span class="line">在IServiceCollection中将给定context注册为服务。在应用程序中（例如与ASP.NET一起）使用依赖项注入(dependency injection)时，可以使用此方法。</span><br><span class="line"></span><br><span class="line">同时该方法有多个overloads即重载</span><br><span class="line">1.AddDbContext&lt;TContext&gt;(IServiceCollection, ServiceLifetime, ServiceLifetime)</span><br><span class="line">2.AddDbContext&lt;TContext&gt;(IServiceCollection, Action&lt;DbContextOptionsBuilder&gt;, ServiceLifetime, ServiceLifetime)</span><br><span class="line">3.AddDbContext&lt;TContext&gt;(IServiceCollection, Action&lt;IServiceProvider,DbContextOptionsBuilder&gt;, ServiceLifetime, ServiceLifetime)</span><br><span class="line">4.AddDbContext&lt;TContextService,TContextImplementation&gt;(IServiceCollection, ServiceLifetime, ServiceLifetime)</span><br><span class="line">5.AddDbContext&lt;TContextService,TContextImplementation&gt;(IServiceCollection, Action&lt;DbContextOptionsBuilder&gt;, ServiceLifetime, ServiceLifetime)</span><br><span class="line">6.AddDbContext&lt;TContextService,TContextImplementation&gt;(IServiceCollection, Action&lt;IServiceProvider,DbContextOptionsBuilder&gt;, ServiceLifetime, ServiceLifetime)</span><br></pre></td></tr></table></figure>
-
-<p>上面代码使用的是第二个重载方法，传入参数中options( Action<DbContextOptionsBuilder> )表示为Context配置DbContextOptions的可选操作。</DbContextOptionsBuilder></p>
-<p>重写完services的AddDbContext之后，使用sqlserver进行连接。</p>
-<p>在项目文件夹中打开命令提示行，输入如下命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dotnet ef migrations add Note</span><br><span class="line">dotnet ef database update</span><br></pre></td></tr></table></figure>
-
-<p>查看已生成的对应的数据库。</p>
-
+        
       
 
       
@@ -363,18 +327,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="常见的扫描工具"><a href="#常见的扫描工具" class="headerlink" title="常见的扫描工具"></a>常见的扫描工具</h2><h5 id="nmap-扫描器"><a href="#nmap-扫描器" class="headerlink" title="nmap 扫描器"></a>nmap 扫描器</h5><p>nmap 是一个开源免费的网络发现工具，通过它能够找出网络上在线的主机，并测试主机上哪些端口处于监听状态，接着通过端口确定主机上运行的应用程序类型与版本信息，最后利用它还能侦测出操作系统的类型和版本。由此可见，nmap是一个功能非常强大的网络探测工具，同时它也成为网络黑客的最爱，因为nmap所实现的这些功能正是黑客入侵网络的一个基本过程。</p>
-<h5 id="N-Stalker-扫描工具"><a href="#N-Stalker-扫描工具" class="headerlink" title="N-Stalker 扫描工具"></a>N-Stalker 扫描工具</h5><p>N-Stalker 漏洞扫描器是 N-Stalker公司研发的一个顶级的安全评估工具。通过与知名的N-Stealth HTTP Security Scanner 及其35000个 Web攻击签名数据库合并，以及正在申请专利的 Web 应用程序安全评估技术组件，N-Stalker Web 漏洞扫描器能为 Web应用程序彻底消除大量普遍的安全隐患，包括缓冲溢出、篡改参数攻击等。<br>N-Stalker Web漏洞扫描器拥有三个不同级别的版本，来更准确地满足不同用户的需求。</p>
-<ul>
-<li><p>QA Edition（研发和SQA 测试）：专门为开发人员和软件质量保证专业人员研制的专业解决方案，用于评估定制的Web应用程序。</p>
-</li>
-<li><p>Infrastructure Edition（Web 服务器设施安全）：专门为Web服务器管理员和IT专业人员所研制的专业解决方案，用于评估Web服务器设施。</p>
-</li>
-<li><p>Enterprise Edition（全面的 Web应用程序安全测试）：专门为审查员和安全专家所研制的最完整和全面的解决方案</p>
-</li>
-</ul>
-<h2 id="常见的嗅探工具"><a href="#常见的嗅探工具" class="headerlink" title="常见的嗅探工具"></a>常见的嗅探工具</h2><h5 id="SRSniffer-嗅探工具"><a href="#SRSniffer-嗅探工具" class="headerlink" title="SRSniffer 嗅探工具"></a>SRSniffer 嗅探工具</h5><p>SRSnifter是一款基于被动债听原理的网络分析方式，可以监视网络的状态、数据流动情况及网络上传输的信息。SRSniffer 可以监听网卡数据包，分析出HTTP数据，可以根据选择监听指定进程。标注出程序、影音和文档等特殊文件，视频、音乐类的网站资源都可以轻格下载了。数据包列表使用两种颜色区分发送和接收，更直观。</p>
-<h5 id="影音嗅探器"><a href="#影音嗅探器" class="headerlink" title="影音嗅探器"></a>影音嗅探器</h5><p>影音嗅探专家是一款能够嗅探出多媒体信息的软件，该软件使用WinPcap开发包，嗅探流过网卡的数据并智能分析过滤，快速找到所需要的网络信息（音乐、视频、图片、文件等）。软件不仅智能化程度高，而且使用方便快捷，可以利用该软件实现相关下载操作。</p>
-
+        
       
 
       
@@ -438,66 +391,8 @@ var _hmt = _hmt || [];
       
         <h2 id="黑客基础术语"><a href="#黑客基础术语" class="headerlink" title="黑客基础术语"></a>黑客基础术语</h2><ul>
 <li><p>肉鸡</p>
-<p>所谓“肉鸡”是一种很形象的比喻，比喻那些可以随意被我们控制的计算机，对方可以是windows系统，也可以是unix/linux系统，可以是普通的个人计算机，也可以是大型的服务器，也可以是 UNIX/Linux系统，可以是普通的个人计算机，也可以是大型的服务器，我们可以像操作自己的计算机那样来操作它们，而不被对方所觉。</p>
-</li>
-<li><p>木马</p>
-<p>木马就是那些表面上伪装成了正常的程序，但是当这些程序被运行时，就会获取系统的整个控制权限。有很多黑客就是热衷于使用木马程序来控制别人的计算机，比如灰鸽子、黑洞、<br>PcShare 等。</p>
-</li>
-<li><p>网页木马</p>
-<p>网页木马是表面上伪装成普通的网页文件或是将恶意的代码直接插入到正常的网页文件中，当有人访问时，网页木马就会利用对方系统或浏览器的漏洞自动将配置好的木马的服务端下载到访问者的计算机上来自动执行。</p>
-</li>
-<li><p>挂马</p>
-<p>挂马就是在别人的网站文件里面放入网页木马或是将代码嵌入到对方正常的网页文件里，以使浏览者中马。</p>
-</li>
-<li><p>后门</p>
-<p>后门是一种形象的比喻，入侵者在利用某些方法成功地控制了目标主机后，可以在对方的系统中植入特定的程序，或者是修改某些设置。这些改动表面上是很难被察觉的，但是人侵者却可以使用相应的程序或方法来轻易地与这台计算机建立连接，重新控制这台计算机，就好像是人侵者偷偷地配了一把主人房间的钥匙，可以随时进出而不被主人发现一样。</p>
-</li>
-<li><p>rootkit</p>
-<p>rootkit 是攻击者用来隐藏自己的行踪和保留Root（根权限，可以理解成Windows下的System 或管理员权限）访问权限的工具。通常，攻击者通过远程攻击的方式获得Root 访问权限，或者是先使用密码猜解（破解）的方式获得对系统的普通访问权限，进入系统后，再通过对方系统内存在的安全漏洞获得系统的Root 权限。然后，攻击者就会在对方的系统中安装 Roorkit，以达到自己长久控制对方的目的。Rootkit 与我们前边提到的木马和后门很类似，但远比它们要隐蔽，黑客守卫者就是很典型的Rootkit，还有国内的Ntroorkit 等。</p>
-</li>
-<li><p>IPC$</p>
-<p>PCS 是共享“命名管道”的资源，它是为了让进程间通信而开放的命名管道，可以通过验证用户名和密码获得相应的权限，在远程管理计算机和查看计算机的共享资源时使用。</p>
-</li>
-<li><p>弱口令</p>
-<p>弱口令指那些强度不够，容易被猜解的，类似123、abc这样的口令（密码）。</p>
-</li>
-<li><p>默认共享</p>
-<p>默认共字是 Windows XP/2000/2003 系统开启共享服务时自动开启所有硬盘的共享，因为加了“S”符号，所以看不到共享的“托手”图标，也称为隐藏共享。</p>
-</li>
-<li><p>Shell</p>
-<p>Shell指的是一种命令执行环境，如我们按键盘上的“Win”+“R”组合键时出现“运行”对话框，在里面输人“cemd”会出现一个用于执行命令的黑窗口，这就是Windows的Shell执行环境。通常我们使用远程溢出程序成功溢出远程计算机后得到的那个用于执行系统命令的环境就是对方的Shell。</p>
-</li>
-<li><p>Webshell</p>
-<p>Webshell 就是以ASP、PHP、JSP或CGI等网页文件形式存在的一种命令执行环境，也可以将其称作是一种网页后门。黑客在攻击了一个网站后，通常会将这些 ASP或 PHP后门文件与网站服务器 WEB 目录下正常的网页文件混在一起，以后就可以使用浏览器来访问这些 ASP或 PHP后门，得到一个命令执行环境，以达到控制网站服务器的目的，可以上传/下载文件、查看数据库、执行任意程序命令等。国内常用的Webshell 有海阳ASP木马、Phpspy、c99shell等。</p>
-</li>
-<li><p>溢出</p>
-<p>确切地讲，应该是“缓冲区溢出”。简单的解释就是程序对接收的输入数据没有执行有效的检测而导致错误，后果可能是造成程序崩溃或是执行攻击者的命令。大致可以分为两类：堆溢出和栈溢出。</p>
-</li>
-<li><p>注入</p>
-<p>随着 B/S 模式应用开发的发展，使用这种模式编写程序的程序员越来越多，但是由于程序员的水平参差不齐，相当大一部分应用程序存在安全隐患。用户可以提交一段数据库查询代码，根据程序返回的结果，获得某些他想要知道的数据，这就是所谓的 SQLinjection，即SQL注入。</p>
-</li>
-<li><p>注入点<br>注入点是可以实行注入的地方，通常是一个访问数据库的连接。根据注入点数据库的运行账号的权限不同，所得到的权限也不同。</p>
-</li>
-<li><p>内网</p>
-<p>内网通俗地讲就是局域网，如网吧、校园网和公司内部网等都属于此类。查看 IP地址如果是在以下3个范围之内，就说明我们是处于内网之中的：10.0.0.0-10.255.255.255，172.16.0.0 - 172.31.255.255，192,168.0.0 ～192.168.255.255。</p>
-</li>
-<li><p>外网</p>
-<p>外网，也叫互联网。从范围上来讲，是指全球性的互联网络。如在中国用计算机上网，连接访问美国的微软官网，就需要通过外网连接才能访问。外网 IP 地址是可以进行全球连接的。</p>
-</li>
-<li><p>端口</p>
-<p>端口相当于一种数据的传输通道。用于接受某些数据，然后传输给相应的服务，而计算机将这些数据处理后，再将相应的恢复通过开启的端口传给对方。一般每一个端口的开放都对应了相应的服务，要关闭这些端口只需将对应的服务关闭就可以了。</p>
-</li>
-<li><p>免杀</p>
-<p>免杀就是通过加壳、加密、修改特征码和加花指令等技术来修改程序，使其逃过杀毒软件的查杀。</p>
-</li>
-<li><p>加壳</p>
-<p>加壳就是利用特殊的算法，将 EXE 可执行程序或 DLL 动态链接库文件的编码进行改变（如实现压缩、加密），以达到缩小文件体积或加密程序编码，甚至是躲过杀毒软件查杀的目的。目前较常用的壳有UPX、ASPack、PePack、PECompact、UPack、免疫007、木马彩衣等。</p>
-</li>
-<li><p>花指令</p>
-<p>花指令就是几句汇编指令，让汇编语句进行一些跳转，使得杀毒软件不能正常地判断病毒文件的构造。说通俗点就是“杀毒软件是从头到脚按顺序来查找病毒，如果我们把病毒的头和脚颠倒位置，杀毒软件就找不到病毒了。</p>
-</li>
-</ul>
-
+<p>所谓“肉鸡”是一种很形象的比喻，比喻那些可以随意被我们控制的计算机，对方可以是windows系统，也可以是unix/linux系统，可以是普通的个人计算机，也可以是大型的服务器，也可以是 UNIX/Linux系统，可以是普通的个人计算机，也可以是大型的服务器，我们可以像操作自己的计算机那样来操作它们，而不被对方所觉。</p></li></ul>
+        
       
 
       
@@ -560,16 +455,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="远程控制技术"><a href="#远程控制技术" class="headerlink" title="远程控制技术"></a>远程控制技术</h2><h5 id="windows系统的远程桌面连接"><a href="#windows系统的远程桌面连接" class="headerlink" title="windows系统的远程桌面连接"></a>windows系统的远程桌面连接</h5><p>在本地计算机右键点击“属性”，进入如下界面，点击“高级系统设置”，点击“远程”，勾选“允许远程协助连接这台计算机”</p>
-<p><img src="/Henry00Chan/Henry00Chan.github/C:%5CUsers%5Cheng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1580092434922.png" alt="1580092434922"></p>
-<p>全局搜索“mstsc”</p>
-<p><img src="/Henry00Chan/Henry00Chan.github/C:%5CUsers%5Cheng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1580092579955.png" alt="1580092579955"></p>
-<p>点击显示选项</p>
-<p><img src="/Henry00Chan/Henry00Chan.github/C:%5CUsers%5Cheng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1580092626281.png" alt="1580092626281"></p>
-<p>在这里配置你的远程桌面</p>
-<p><img src="/Henry00Chan/Henry00Chan.github/C:%5CUsers%5Cheng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1580092664402.png" alt="1580092664402"></p>
-<hr>
-<h5 id="TeamViewer远程控制软件"><a href="#TeamViewer远程控制软件" class="headerlink" title="TeamViewer远程控制软件"></a>TeamViewer远程控制软件</h5><p><img src="/Henry00Chan/Henry00Chan.github/C:%5CUsers%5Cheng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1580092781280.png" alt="1580092781280"></p>
-
+        
       
 
       
@@ -632,29 +518,7 @@ var _hmt = _hmt || [];
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="影子系统"><a href="#影子系统" class="headerlink" title="影子系统"></a>影子系统</h2><p>影子系统隔离保护 Windows操作系统，同时创建一个和真实操作系统一模一样的虚拟化系统，就像计算机的虚拟替身，进入影子模式可以保证在使用计算机的时候，因为无意操作发生破坏计算机的改变不会被保存下来。下面我们将介绍影子系统的原理及使用。</p>
-<p>影子系统（PowerShadow Master），是隔离保护Windows操作系统，同时创建一个和真实操作系统一模一样的虚拟化影像系统。它可以构建现有操作系统的虚拟影像（即影子模式），它和真实的系统完全一样，用户可随时选择启用或退出这个虚拟影像，并且不会对用户系统产生影响。当遭受病毒、木马入侵时，也只会对影子系统进行破坏，并不会破坏原系统。影子系统采用先进的操作系统虚拟化技术生成当前操作系统的影像，它具有真实系统完全一样的功能，但它通过特有的技术把需要保护的硬盘已有内容保护起来（其实也就是弄成了只读），在空白的硬盘区对已有内容进行编辑操作，并做有标记。重启计算机的时候，放弃新编辑的内容。所有的这些操作只是做做标记而已，并没有真正备份复制文件内容，影子系统不同于还原类软件，不需做任何镜像。</p>
-<h2 id="系统重装"><a href="#系统重装" class="headerlink" title="系统重装"></a>系统重装</h2><p>重装系统是指对计算机的操作系统进行重新安装。当用户误操作或受病毒、木马程序的破坏，系统中的重要文件受损导致错误甚至崩溃无法启动，不得不重新安装操作系统。下面我们将介绍几种系统重装方法供用户参考使用。</p>
-<h5 id="OneKey-Ghost-重装系统"><a href="#OneKey-Ghost-重装系统" class="headerlink" title="OneKey Ghost 重装系统"></a>OneKey Ghost 重装系统</h5><p>OneKey Ghost 是一款人性化、设计专业、操作简便的装机软件，OneKey Ghost 一键还原能在Win32（64）、WinPE、DOS下对任意分区进行一键备份、恢复。可支持多硬盘、混合硬盘（IDE/SATA/SCSI）、混合分区（FAT16/FAT32/NTFS/exFAT）、未指派盘符分区、盘符错乱、隐藏分区及交错存在非 Windows分区。OncKey Ghos 支持多系统，并且系统不在第一个硬盘第一个分区，支持品牌机隐藏分区等。</p>
-<h5 id="制作-U-盘启动盘"><a href="#制作-U-盘启动盘" class="headerlink" title="制作 U 盘启动盘"></a>制作 U 盘启动盘</h5><p>传统的光盘、硬盘安装系统已经逐渐被淘汰，U盘已成为我们日常生活中常用的存储工<br>具，所以可以利用U盘制作启动盘来安装系统，以网络上提供的U启动软件为例，具体操<br>作方法如下。</p>
-<ol>
-<li><p>下载并安装U启动软件，安装结束后，单击“开始制作”按钮。</p>
-</li>
-<li><p>进入制作的主界面，选择设备选项会自动显示插入的U盘型号，写入模式、U盘分区、个性化设置等都可以根据用户所需进行设置。设置完成之后单击“开始制作”接查即可。</p>
-</li>
-<li><p>接着弹出警告信息提示框，确认后单击“确定”按钮。</p>
-</li>
-<li><p>之后进入U盘启动盘制作过程，U 盘启动盘制作成功后会弹出提示信息提示框。<br>提示是否要用模拟启动测试U盘的启动情况，可根据所需进行选择。</p>
-</li>
-<li><p>把制作好的 U 盘启动盘插在计算机的 USB 接口，重启计算机时根据开机画面提示按开机启动快捷键进入 U启动主菜单界面，选择“【02】U启动WIN8 PE 标准版(新机器）”选项并按回车键。</p>
-</li>
-<li><p>在进入 WIN8 PE系统后，弹出“U 启动 PE 装机工具”窗口，把准备好的Windows7系统镜像文件放在C盘中，单击“确定”按钮。</p>
-</li>
-<li><p>系统弹出程序将执行还原操作提示框，勾选“完成后重启”复选框，单击“确定”接钮，接着就是还原过程，静静等待直到还原结束会弹出还原成功提示框。单点“确定”按钮马上变启计算机，或者等将倒计助完成也会自动重启计算机。</p>
-</li>
-<li><p>之后就开始进行安装程序，慢慢等待直至程序安装完成。</p>
-</li>
-</ol>
-
+        
       
 
       
@@ -719,57 +583,7 @@ var _hmt = _hmt || [];
         <h2 id="HEXO搭建个人博客"><a href="#HEXO搭建个人博客" class="headerlink" title="HEXO搭建个人博客"></a>HEXO搭建个人博客</h2><p>本文章讲述如何使用hexo上配合github pages搭建个人博客</p>
 <p>搭建过程并不需要什么编程基础，按部就班即可</p>
 <p>操作系统:Windows</p>
-<h4 id="1-安装git-bash"><a href="#1-安装git-bash" class="headerlink" title="1.安装git bash"></a>1.安装git bash</h4><ul>
-<li><p>下载地址： <a href="https://gitforwindows.org/" target="_blank" rel="noopener">https://gitforwindows.org/</a></p>
-</li>
-<li><p>安装完成后在桌面打开git bash，写入命令：git version</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$git version</span><br><span class="line"></span><br><span class="line">git version 2.24.1.windows.2</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示以上信息即为安装成功</p>
-</li>
-</ul>
-<h4 id="2-安装node-js"><a href="#2-安装node-js" class="headerlink" title="2.安装node.js"></a>2.安装node.js</h4><ul>
-<li><p>下载地址：<a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a> （LTS为长期支持版，Current为当前最新版，两个版本都可以）</p>
-</li>
-<li><p>安装完成后同样再git bash写入命令，命令为：node -v</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$node -v</span><br><span class="line">v10.16.3</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示以上信息即为安装成功</p>
-</li>
-</ul>
-<h4 id="3-安装Hexo"><a href="#3-安装Hexo" class="headerlink" title="3.安装Hexo"></a>3.安装Hexo</h4><p>安装hexo是重头戏，不过也是很简单</p>
-<ul>
-<li><p>先在本地创建自己的文件夹，这里命名为blog</p>
-</li>
-<li><p>然后在blog文件夹，右键Git Bash Here，写入如下命令利用npm安装hexo</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装完成查看hexo的版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v</span><br><span class="line">hexo: 4.2.0</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows_NT 10.0.18362 win32 x64</span><br><span class="line">http_parser: 2.8.0</span><br><span class="line">node: 10.16.3</span><br><span class="line">v8: 6.8.275.32-node.54</span><br><span class="line">uv: 1.28.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.7</span><br><span class="line">ares: 1.15.0</span><br><span class="line">modules: 64</span><br><span class="line">nghttp2: 1.39.2</span><br><span class="line">napi: 4</span><br><span class="line">openssl: 1.1.1c</span><br><span class="line">icu: 64.2</span><br><span class="line">unicode: 12.1</span><br><span class="line">cldr: 35.1</span><br><span class="line">tz: 2019a</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示以上信息即为安装成功</p>
-</li>
-<li><p>初始化hexo项目</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init blog</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装所需的依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>生成静态文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g 或者 $ hexo generate</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在本地查看初始化的项目</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s 或者 $ hexo server</span><br><span class="line"></span><br><span class="line">在浏览器输入http:&#x2F;&#x2F;localhost:4000&#x2F; 在本地查看初始化的项目</span><br><span class="line"></span><br><span class="line">使用ctrl+c可以把服务关掉</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ul>
-<h4 id="4-GitHub创建个人仓库"><a href="#4-GitHub创建个人仓库" class="headerlink" title="4.GitHub创建个人仓库"></a>4.GitHub创建个人仓库</h4><ul>
-<li></li>
-<li></li>
-</ul>
-
+        
       
 
       
